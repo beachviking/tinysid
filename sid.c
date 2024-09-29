@@ -678,8 +678,8 @@ void SIDInit()
 
     if (sid1) free(sid1);
     if (sid2) free(sid2);
-    sid1 = malloc(sizeof(osid_t));
-    sid2 = malloc(sizeof(osid_t));
+    sid1 = (osid_t*)malloc(sizeof(osid_t));
+    sid2 = (osid_t*)malloc(sizeof(osid_t));
     osid_init(sid1, 0);
     osid_init(sid2, 1);
 
@@ -1515,55 +1515,55 @@ void osid_write(osid_t *sid, uint32 adr, uint32 byte, cycle_t now, bool rmw)
             break;
 
         case 29:
-            if (byte) {
-                if (byte < 0xfc) {            // Galway noise
-                    sid->gn_adr = (sid->regs[0x1f] << 8) | sid->regs[0x1e];
-                    sid->gn_tone_length = sid->regs[0x3d];
-                    sid->gn_volume_add = sid->regs[0x3e] & 15;
-                    sid->gn_tone_counter = byte;
-                    sid->gn_base_cycles = sid->regs[0x5d];
-                    sid->gn_loop_cycles = sid->regs[0x3f];
-                    sid->gn_last_count = 0;
-                    sid->v4_count = 0;
-                    int div = ram[sid->gn_adr + sid->gn_tone_counter] * sid->gn_loop_cycles + sid->gn_base_cycles;
-                    if (div == 0)
-                        sid->v4_add = 0;
-                    else
-                        sid->v4_add = sid_cycles * 0x10000 / div;
-                    sid->v4_state = V4_GALWAY_NOISE;
+            // if (byte) {
+            //     if (byte < 0xfc) {            // Galway noise
+            //         sid->gn_adr = (sid->regs[0x1f] << 8) | sid->regs[0x1e];
+            //         sid->gn_tone_length = sid->regs[0x3d];
+            //         sid->gn_volume_add = sid->regs[0x3e] & 15;
+            //         sid->gn_tone_counter = byte;
+            //         sid->gn_base_cycles = sid->regs[0x5d];
+            //         sid->gn_loop_cycles = sid->regs[0x3f];
+            //         sid->gn_last_count = 0;
+            //         sid->v4_count = 0;
+            //         int div = ram[sid->gn_adr + sid->gn_tone_counter] * sid->gn_loop_cycles + sid->gn_base_cycles;
+            //         if (div == 0)
+            //             sid->v4_add = 0;
+            //         else
+            //             sid->v4_add = sid_cycles * 0x10000 / div;
+            //         sid->v4_state = V4_GALWAY_NOISE;
 
-                } else if (byte == 0xfd) {    // Sample off
-                    sid->v4_state = V4_OFF;
+            //     } else if (byte == 0xfd) {    // Sample off
+            //         sid->v4_state = V4_OFF;
 
-                } else {                    // Sample on
-                    sid->sm_adr = ((sid->regs[0x1f] << 8) | sid->regs[0x1e]) << 1;
-                    sid->sm_end_adr = ((sid->regs[0x3e] << 8) | sid->regs[0x3d]) << 1;
-                    sid->sm_rep_adr = ((sid->regs[0x7f] << 8) | sid->regs[0x7e]) << 1;
-                    sid->sm_rep_count = sid->regs[0x3f];
-                    sid->sm_big_endian = sid->regs[0x7d];
-                    switch (byte) {
-                        case 0xfc:
-                            sid->sm_volume = 2;
-                            break;
-                        case 0xfe:
-                            sid->sm_volume = 1;
-                            break;
-                        case 0xff:
-                            sid->sm_volume = 0;
-                            break;
-                    };
-                    int div = (sid->regs[0x5e] << 8) | sid->regs[0x5d];
-                    if (sid->regs[0x5f])
-                        div >>= sid->regs[0x5f];
-                    if (div == 0) {
-                        sid->v4_state = V4_OFF;
-                    } else {
-                        sid->v4_count = 0;
-                        sid->v4_add = sid_cycles * 0x10000 / div;
-                        sid->v4_state = V4_SAMPLE;
-                    }
-                }
-            }
+            //     } else {                    // Sample on
+            //         sid->sm_adr = ((sid->regs[0x1f] << 8) | sid->regs[0x1e]) << 1;
+            //         sid->sm_end_adr = ((sid->regs[0x3e] << 8) | sid->regs[0x3d]) << 1;
+            //         sid->sm_rep_adr = ((sid->regs[0x7f] << 8) | sid->regs[0x7e]) << 1;
+            //         sid->sm_rep_count = sid->regs[0x3f];
+            //         sid->sm_big_endian = sid->regs[0x7d];
+            //         switch (byte) {
+            //             case 0xfc:
+            //                 sid->sm_volume = 2;
+            //                 break;
+            //             case 0xfe:
+            //                 sid->sm_volume = 1;
+            //                 break;
+            //             case 0xff:
+            //                 sid->sm_volume = 0;
+            //                 break;
+            //         };
+            //         int div = (sid->regs[0x5e] << 8) | sid->regs[0x5d];
+            //         if (sid->regs[0x5f])
+            //             div >>= sid->regs[0x5f];
+            //         if (div == 0) {
+            //             sid->v4_state = V4_OFF;
+            //         } else {
+            //             sid->v4_count = 0;
+            //             sid->v4_add = sid_cycles * 0x10000 / div;
+            //             sid->v4_state = V4_SAMPLE;
+            //         }
+            //     }
+            // }
             break;
     }
 }

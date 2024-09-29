@@ -183,7 +183,10 @@ int main(int argc, char **argv)
         if (SDL_WaitEvent(&e)) {
             if (e.type == SDL_QUIT)
                 break;
+            if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
+                break;
         }
+}        
     }
 
     ExitAll();

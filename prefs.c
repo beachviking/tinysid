@@ -214,7 +214,7 @@ static void add_data(const char *name, prefs_type type, void *data, int size)
     if (d == NULL)
         return;
     memcpy(d, data, size);
-    prefs_node *p = malloc(sizeof(prefs_node));
+    prefs_node *p = (prefs_node*)malloc(sizeof(prefs_node));
     p->next = 0;
     p->name = strdup(name);
     p->type = type;

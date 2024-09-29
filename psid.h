@@ -47,13 +47,15 @@ enum {
 };
 
 // Read 16-bit quantity from PSID header
-inline uint16 read_psid_16(const uint8 *p, int offset)
+uint16 read_psid_16(const uint8 *p, int offset)
+// inline uint16 read_psid_16(const uint8 *p, int offset)
 {
     return (p[offset] << 8) | p[offset + 1];
 }
 
 // Read 32-bit quantity from PSID header
-inline uint32 read_psid_32(const uint8 *p, int offset)
+uint32 read_psid_32(const uint8 *p, int offset)
+// inline uint32 read_psid_32(const uint8 *p, int offset)
 {
     return (p[offset] << 24) | (p[offset + 1] << 16) | (p[offset + 2] << 8) | p[offset + 3];
 }
